@@ -1,4 +1,5 @@
 ﻿using CalcMVVM.Model;
+using System.Windows;
 
 namespace CalcMVVM.ViewModel
 {
@@ -6,6 +7,7 @@ namespace CalcMVVM.ViewModel
 	{
 		private readonly Calculator _calculator;
 		private string _result;
+		private int _action;
 
 		public CalculatorViewModel()
 		{
@@ -15,21 +17,13 @@ namespace CalcMVVM.ViewModel
 		public int A
 		{
 			get => _calculator.A;
-			set
-			{
-				_calculator.A = value;
-				//Calc();
-			}
+			set => _calculator.A = value;
 		}
 
 		public int B
 		{
 			get => _calculator.B;
-			set
-			{
-				_calculator.B = value;
-				//Calc();
-			}
+			set => _calculator.B = value;			
 		}
 
 		public string Result
@@ -42,22 +36,63 @@ namespace CalcMVVM.ViewModel
 			}
 		}
 
+		public int Action
+        {
+			get => _action;
+            set
+            {
+				_action = value;
+				OnPropertyChanged(nameof(Action));
+            }
+        }
+
 		private void Calc()
 		{
-			Result = _calculator.Del().ToString();
+            switch (Action)
+            {
+				case 0:
+					Result = _calculator.Add().ToString();
+					break;
+				case 1:
+					Result = _calculator.Sub().ToString();
+					break;
+				case 2:
+					Result = _calculator.Mul().ToString();
+					break;
+				case 3:
+					Result = _calculator.Div().ToString();
+					break;
+            }
 		}
 
-		#region CalcCommand
-		private RelayCommand _calcCommand;
+        #region Commands        
+
+        #region CalcCommand
+        private RelayCommand _calcCommand;
 		public RelayCommand CalcCommand => _calcCommand ?? (_calcCommand =
-			                                new RelayCommand(ExecuteCalcCommand,
-				                                CanCalcCommand));
+											new RelayCommand(ExecuteCalcCommand,
+												CanCalcCommand));
 		public void ExecuteCalcCommand(object parameter)
 		{
 			Calc();
 		}
 
-		public bool CanCalcCommand(object parameter) => B!=0;
+		public bool CanCalcCommand(object parameter) => B != 0 && Action > -1;
+		#endregion
+
+		#region ExitCommand
+		private RelayCommand _exitCommand;
+		public RelayCommand ExitCommand => _exitCommand ?? (_exitCommand =
+											new RelayCommand(ExecuteExitCommand,
+												CanExitCommand));
+		public void ExecuteExitCommand(object parameter)
+		{
+			Application.Current.Shutdown();
+		}
+
+		public bool CanExitCommand(object parameter) => true;
+		#endregion
+
 		#endregion
 	}
 }

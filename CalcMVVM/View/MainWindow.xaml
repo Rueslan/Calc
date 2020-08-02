@@ -5,14 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CalcMVVM.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Calculator" Height="450" Width="800">
     <Window.Resources>
         <local:CalculatorViewModel x:Key="ViewModel"/>
     </Window.Resources>
     <StackPanel DataContext="{StaticResource ViewModel}">
         <TextBox Margin="5" Text="{Binding A, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Margin="5" Text="{Binding B, UpdateSourceTrigger=PropertyChanged}"/>
+        <ComboBox Margin="5" SelectedIndex="{Binding Action}">
+            <ComboBoxItem Content="Add (+)"/>
+            <ComboBoxItem Content="Sub (-)"/>
+            <ComboBoxItem Content="Mul (*)"/>
+            <ComboBoxItem Content="Div (/)"/>
+        </ComboBox>
         <TextBlock Margin="5" Text="{Binding Result, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Margin="5" Command="{Binding CalcCommand}" Content="Push me"/>
+        <Button Margin="5" Command="{Binding CalcCommand}" Content="Calc"/>
+        <Button Margin="5, 40" Command="{Binding ExitCommand}" Content="Exit"/>
     </StackPanel>
 </Window>
